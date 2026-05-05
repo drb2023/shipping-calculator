@@ -1,4 +1,14 @@
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "https://db-shipping-calculator.netlify.app",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
 export default async ({ req, res, log, error }) => {
+  if (req.method === "OPTIONS") {
+    return res.empty({ headers: CORS_HEADERS });
+  }
+
   const { fromZip, toZip, weight, length, width, height } = req.body;
 
   try {
@@ -27,9 +37,9 @@ export default async ({ req, res, log, error }) => {
 
     const data = await response.json();
     log(`Fetched ${data.rates?.length ?? 0} rates`);
-    return res.json(data.rates);
+    return res.json(data.rates, 200, CORS_HEADERS);
   } catch (err) {
     error(err.message);
-    return res.json({ error: err.message }, 500);
+    return res.json({ error: err.message }, 500, CORS_HEADERS);
   }
 };
