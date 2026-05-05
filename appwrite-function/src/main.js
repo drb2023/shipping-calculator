@@ -6,7 +6,7 @@ const CORS_HEADERS = {
 
 export default async ({ req, res, log, error }) => {
   if (req.method === "OPTIONS") {
-    return res.empty({ headers: CORS_HEADERS });
+    return res.text("", 204, CORS_HEADERS);
   }
 
   const { fromZip, toZip, weight, length, width, height } = req.body;
